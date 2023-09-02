@@ -21,7 +21,7 @@ class PDODatabaseConnection implements DatabaseInterface
     /**
      * @throws DatabaseConnectionException
      */
-    public function connection(): void
+    public function connection()
     {
         $dsn=$this->generateDsn($this->config);
         try {
@@ -32,6 +32,7 @@ class PDODatabaseConnection implements DatabaseInterface
         } catch(PDOException $e) {
             throw new DatabaseConnectionException($e->getMessage());
         }
+        return $this;
     }
 
     public function getConnection()
