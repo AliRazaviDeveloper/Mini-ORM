@@ -57,6 +57,15 @@ class PDOQueryBuilder
         return (int)$query->rowCount();
     }
 
+    public function delete(): int
+    {
+        $condtion=implode(" and ",$this->condition);
+        $sql="DELETE FROM {$this->table} WHERE {$condtion}";
+        $query=$this->connection->prepare($sql);
+        $query->execute($this->value);
+        return (int)$query->rowCount();
+    }
+
     public function trancateAll()
     {
         $query=$this->connection->prepare("show tables");

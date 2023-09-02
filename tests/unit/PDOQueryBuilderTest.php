@@ -59,6 +59,14 @@ class PDOQueryBuilderTest extends TestCase
         return $this->queryBuilder->table("bugs")->create($data);
     }
 
+    public function testCanBeDeleteFeild()
+    {
+        $this->insertData();
+        $result=$this->queryBuilder->table("bugs")->where("email","ali@gmail.com")->where("name","Ali Razavi")->delete();
+        $this->assertIsInt($result);
+        $this->assertEquals(1,$result);
+    }
+
     protected function tearDown(): void
     {
         $this->queryBuilder->trancateAll();
