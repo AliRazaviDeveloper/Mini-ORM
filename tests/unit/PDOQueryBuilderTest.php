@@ -90,6 +90,46 @@ class PDOQueryBuilderTest extends TestCase
         }
     }
 
+    public function testCanBeGetColumn()
+    {
+        $this->insertMultipleData(10);
+        $this->insertMultipleData(10, ["name" => "Mohammad"]);
+        $result = $this->queryBuilder->table("bugs")->where("name", "Mohammad")->get(['name', 'email']);
+        $this->assertIsArray($result);
+        $this->assertObjectHasProperty("name", $result[0]);
+        $this->assertObjectHasProperty("email", $result[0]);
+    }
+
+    public function testShouldBeReturnOneRecord()
+    {
+        $this->insertMultipleData(10);
+        $result = $this->queryBuilder->table("bugs")->where("name", "Ali Razavi")->first();
+        $this->assertIsObject($result);
+        $this->assertObjectHasProperty("id", $result);
+        $this->assertObjectHasProperty("title", $result);
+        $this->assertObjectHasProperty("name", $result);
+        $this->assertObjectHasProperty("email", $result);
+        $this->assertObjectHasProperty("link", $result);
+        $this->assertObjectHasProperty("created_at", $result);
+        $this->assertObjectHasProperty("updated_at", $result);
+    }
+
+    public function testShouldBeReturnOneRecordById()
+    {
+        $id = $this->insertData(['name' => "Mohammad"]);
+        $result = $this->queryBuilder->table("bugs")->find($id);
+        $this->assertIsObject($result);
+
+        $this->assertEquals($id, $result->id);
+    }
+    public function testShouldBeReturnOneRecordFindBy()
+    {
+        $id = $this->insertData(['name' => "Mohammad"]);
+        $result = $this->queryBuilder->table("bugs")->findBy("name", "Mohammad");
+        $this->assertIsObject($result);
+        $this->assertEquals($id, $result->id);
+    }
+
     public function tearDown(): void
     {
         $this->queryBuilder->trancateAll();

@@ -77,15 +77,35 @@ class PDOQueryBuilder
         $this->connection->rollBack();
     }
 
-    public function get(): array
+    public function get($option = ["*"]): array
     {
         $condtion = implode(" and ", $this->condition);
+        $column = implode(",", $option);
 
-        $sql = "SELECT * FROM {$this->table} WHERE {$condtion}";
+        $sql = "SELECT {$column} FROM {$this->table} WHERE {$condtion}";
 
         $query = $this->connection->prepare($sql);
         $query->execute($this->value);
         return $query->fetchAll();
+    }
+
+    public function first()
+    {
+        $condtion = implode(" and ", $this->condition);
+        $sql = "SELECT * FROM {$this->table} WHERE {$condtion}";
+        $query = $this->connection->prepare($sql);
+        $query->execute($this->value);
+        return $query->fetch();
+    }
+
+    public function find(int $id)
+    {
+        return $this->where("id", $id)->first();
+    }
+
+    public function findBy(string $column, $value)
+    {
+        return $this->where($column, $value)->first();
     }
 
 
